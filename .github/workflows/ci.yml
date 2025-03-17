@@ -1,0 +1,46 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Triggered on push to main branch
+  pull_request:
+    branches:
+      - main  # Triggered on pull requests to main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Runs on Ubuntu environment
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Action to check out the repo
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2  # Action to set up Node.js
+      with:
+        node-version: '14'  # Node.js version to use
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm install  # Install backend dependencies
+        cd ../frontend
+        npm install  # Install frontend dependencies
+
+    - name: Run Backend Tests
+      run: |
+        cd backend
+        npm test  # Run backend tests
+
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm test  # Run frontend tests
+
+    - name: Lint code
+      run: |
+        cd backend
+        npm run lint  # Run linting for the backend
+        cd ../frontend
+        npm run lint  # Run linting for the frontend

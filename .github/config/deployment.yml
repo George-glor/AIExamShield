@@ -1,0 +1,39 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Triggers on push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm install
+        cd ../frontend
+        npm install
+
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: Deploy to Server
+      run: |
+        # Example deploy script to your server or hosting platform
+        # Replace this with actual deployment steps to your hosting platform
+        echo "Deploying to server..."
+        # Deployment commands go here, e.g., `rsync`, `scp`, or platform-specific actions
+        # You can add steps for cloud platforms like AWS, Heroku, or DigitalOcean here
