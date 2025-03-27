@@ -1,30 +1,62 @@
-// studentController.js
-const Student = require('../models/Student'); // Import Student model
-const jwt = require('jsonwebtoken'); // Import JWT for student authentication
+const Exam = require('../models/Exam');
+const Result = require('../models/Result');
+const { detectSuspiciousActivity } = require('../services/aiMonitoring');
+const { validationResult } = require('express-validator');
 
-// Student Login (includes face recognition step)
-exports.login = async (req, res) => {
+// Start Exam
+const startExam = async (req, res) => {
+  const { examCode } = req.params;
+
   try {
-    const { first_name, last_name, personal_number, face_id_data } = req.body;
-    
-    // Find student by personal number
-    const student = await Student.findOne({ personal_number });
-    if (!student) return res.status(400).json({ message: 'Student not found' });
-
-    // Perform face recognition check (simplified for now)
-    if (student.face_id_data !== face_id_data) {
-      return res.status(400).json({ message: 'Face recognition failed' });
+    const exam = await Exam.findOne({ examCode });
+    if (!exam) {
+      return res.status(404).json({ message: 'Exam not found' });
     }
-
-    // Generate JWT token for student
-    const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    // Respond with the token
-    res.json({ message: 'Login successful', token });
+    res.status(200).json({ exam });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error fetching exam', error });
   }
 };
 
-// More student functions (take exam, submit exam, etc.) will go here.
+// Submit Exam
+const submitExam = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { examCode } = req.params;
+  const { answers, videoData } = req.body;
+
+  try {
+    const exam = await Exam.findOne({ examCode });
+    if (!exam) {
+      return res.status(404).json({ message: 'Exam not found' });
+    }
+
+    // Check if exam duration has expired
+    const currentTime = new Date();
+    const examEndTime = new Date(exam.startTime).getTime() + exam.duration * 60000; // Convert duration to milliseconds
+    if (currentTime > examEndTime) {
+      return res.status(400).json({ message: 'Exam duration has expired' });
+    }
+
+    // Analyze video data for suspicious activity
+    const aiReport = await detectSuspiciousActivity(videoData);
+
+    // Save student's answers and AI report
+    const result = new Result({
+      examId: exam._id,
+      studentId: req.user.id,
+      answers,
+      aiReport,
+    });
+    await result.save();
+
+    res.status(200).json({ message: 'Exam submitted successfully', result });
+  } catch (error) {
+    res.status(500).json({ message: 'Error submitting exam', error });
+  }
+};
+
+module.exports = { startExam, submitExam };

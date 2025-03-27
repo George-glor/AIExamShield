@@ -1,0 +1,40 @@
+.teacher-dashboard {
+    padding: 2rem;
+  }
+  
+  .teacher-dashboard h1 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .teacher-dashboard ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .teacher-dashboard ul li {
+    background: #f9f9f9;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+  }
+  
+  .teacher-dashboard input {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .teacher-dashboard button {
+    padding: 0.75rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .teacher-dashboard button:hover {
+    background: #0056b3;
+  }

@@ -1,9 +1,11 @@
-// authRoutes.js
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const { loginAdmin, loginTeacher, loginStudent } = require('../controllers/authController'); // Correct the path if necessary
+//const { default: Login } = require('../../frontend/src/components/Login/Login');
 
-// Authentication routes (login, registration, etc.)
-router.post('/login', authController.login); // User login (admin, teacher, or student)
+// Authentication routes
+router.post('/login/admin', loginAdmin);
+router.post('/login/teacher', loginTeacher);
+router.post('/login/student', loginStudent);
 
 module.exports = router;

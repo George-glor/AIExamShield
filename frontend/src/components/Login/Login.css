@@ -1,0 +1,44 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom, #007bff, #0056b3);
+}
+
+.login-box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 500px;
+  height: 300px;
+}
+
+.login-logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.role-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.role-button {
+  flex: 1;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.role-button:hover {
+  background: #0056b3;
+}

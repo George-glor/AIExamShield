@@ -1,12 +1,15 @@
-// Result.js
 const mongoose = require('mongoose');
 
 const ResultSchema = new mongoose.Schema({
-  exam_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Exam', required: true },
-  student_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-  result: { type: String, enum: ['passed', 'failed'], required: true },
-  ai_report: { type: String, required: true }, // AI-generated report for exam monitoring
-  date_graded: { type: Date, default: Date.now },
+  examId: { type: mongoose.Schema.Types.ObjectId, ref: 'Exam' },
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+  answers: Object,
+  aiReport: Object,
+  recordingStartedAt: Date, // Track when recording started
+  submittedAt: { type: Date, default: Date.now },
+  recordingStartedAt: Date, // Track when recording started
+
 });
 
 module.exports = mongoose.model('Result', ResultSchema);
+
